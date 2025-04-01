@@ -3,62 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Máy Tính Giọng Nói</title>
+    <title>Lời Xin Lỗi</title>
     <style>
         body {
+            background: url('https://i.imgur.com/uPa15dN.jpeg') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
             font-family: Arial, sans-serif;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
         }
-        .calculator {
-            background: white;
-            padding: 20px;
+        .message {
+            font-size: 24px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+        }
+        .buttons {
+            position: relative;
         }
         button {
-            margin: 10px;
-            padding: 10px;
             font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        #agree {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #no {
+            background-color: #f44336;
+            color: white;
+            position: absolute;
         }
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h2>Máy Tính Giọng Nói</h2>
-        <button onclick="startListening()">Nhấn để nói</button>
-        <br>
-        <h3>Phép tính: <span id="expression">...</span></h3>
-        <h3>Kết quả: <span id="result">...</span></h3>
+    <div class="message">Tôi xin lỗi, bạn bỏ qua cho tôi nhé?</div>
+    <div class="buttons">
+        <button id="agree" onclick="agree()">Đồng ý</button>
+        <button id="no" onclick="noClick()">Không</button>
     </div>
+
     <script>
-        function startListening() {
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'vi-VN';
-            recognition.start();
-
-            recognition.onresult = function(event) {
-                const speechResult = event.results[0][0].transcript;
-                document.getElementById('expression').textContent = speechResult;
-                calculate(speechResult);
-            };
-
-            recognition.onerror = function(event) {
-                alert('Lỗi nhận diện giọng nói, hãy thử lại!');
-            };
+        let noCount = 0;
+        function agree() {
+            document.body.innerHTML = '<div class="message">Nếu vậy thì chấp nhận addfr đi =))</div>';
         }
-
-        function calculate(expression) {
-            try {
-                let result = eval(expression.replace(/x/g, '*').replace(/÷/g, '/'));
-                document.getElementById('result').textContent = result;
-            } catch (error) {
-                document.getElementById('result').textContent = 'Lỗi cú pháp';
+        function noClick() {
+            noCount++;
+            let agreeButton = document.getElementById('agree');
+            if (noCount >= 5) {
+                document.getElementById('no').remove();
+                return;
             }
+            let noButton = document.getElementById('no');
+            let newNoSize = Math.max(10, 18 - noCount * 3) + 'px';
+            let newAgreeSize = (18 + noCount * 3) + 'px';
+            noButton.style.fontSize = newNoSize;
+            noButton.style.padding = Math.max(5, 10 - noCount) + 'px';
+            noButton.style.top = Math.random() * 200 + 'px';
+            noButton.style.left = Math.random() * 200 + 'px';
+            agreeButton.style.fontSize = newAgreeSize;
+            agreeButton.style.padding = (10 + noCount * 2) + 'px';
         }
     </script>
 </body>
